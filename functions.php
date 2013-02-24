@@ -38,9 +38,9 @@ function custom_upload_mimes($mimes=array())
     return $mimes; 
 }
 
-/******************************/
-/* Reordena el menú del admin */
-/******************************/
+/********************************/
+/** Reordena el menú del admin **/
+/********************************/
 add_filter('custom_menu_order', 'return_true');
 function return_true()
 {
@@ -79,5 +79,49 @@ function nuevo_orden_menu($menu)
     
     /* Devuelve el nuevo menú con los recolectados al final */
     return array_merge($mi_menu, $al_final);
+}
+
+/****************************************************************/
+/** Agrega y/o reordena columnas de la lista de posts en admin **/
+/****************************************************************/
+add_filter('manage_posts_columns', 'columnas_de_entradas');
+function columnas_de_entradas($columnas)
+{
+    /* Columnas por defecto:
+    $columnas['cb'] => '<input type="checkbox">';
+    $columnas['title'] => 'Título';
+    $columnas['author'] => 'Autor';
+    $columnas['categories'] => 'Categorías';
+    $columnas['tags'] => 'Etiquetas';
+    $columnas['comments'] => '<span class="vers"><div title="Comentarios" class="comment-grey-bubble"></div></span>';
+    $columnas['date'] => 'Fecha';
+    */
+    
+    /* Reordena las columnas
+       Omite la columna 'author'
+       Agrega la columna 'Imagen destacada'
+    */
+    $mis_columnas=array();
+    $mis_columnas['cb']=$columnas['cb'];
+    $mis_columnas['title']=$columnas['title'];
+    $mis_columnas['categories']=$columnas['categories'];
+    $mis_columnas['tags']=$columnas['tags'];
+    $mis_columnas['img_destacada']='Imagen destacada';
+    $mis_columnas['comments']=$columnas['comments'];
+    $mis_columnas['date']=$columnas['date'];
+    
+    return $mis_columnas;
+}
+add_filter('manage_posts_custom_column', 'columnas_personalizadas');
+function columnas_personalizadas($columna, $id)
+{
+    /* Procesa las columnas */
+    switch ($columna):
+        /* Columna de imagen destacada */
+        case 'img_destacada'
+            /* Imprime la miniatura */
+            echo the_post_thumbnail('thumbnail');
+            break;
+    endswitch;
 }
 ?>
