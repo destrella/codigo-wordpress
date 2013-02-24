@@ -1,4 +1,60 @@
 <?php
+/***********************************************/
+/** Muestra enlace de regreso en una entrada. **/
+/** ejemplo de uso:                           **/
+/** echo '<p>'.enlace_regresar(false).'</p>'; **/
+/***********************************************/
+function enlace_regresar($echo=true, $formato='post')
+{
+    /* variable $post para tomar el número de id */
+    global $post;
+    
+    /* el id del post al cual regresar */
+    $id=$formato.'-'.$post->ID;
+    
+    /* toma el enlace de donde viene si existe */
+    $el_enlace=!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:false;
+    
+    /* comprueba que exista el enlace y que se esté en un post o página */
+    if($el_enlace && is_single()):  
+        /* divide la url para personalizar el texto de regreso */
+        $parte=explode('/', $el_enlace);
+        /* ejemplo de la url después del explode:
+         * [0] => http:
+         * [1] => 
+         * [2] => ejemplo.com
+         * [3] => ?s=texto
+         */
+
+        /* texto del enlace */
+        $texto='&larr; Regresar';
+        
+        /* determina de donde viene para personalizar el texto de regreso */
+        if(is_numeric($parte[3])):
+            /* viene del calendario */
+            $texto.=' al calendario';
+        elseif(strstr($parte[3],'?s=')):
+            /* viene de una búsqueda */
+            $texto.=' a la búsqueda';
+        endif;
+        
+        $enlace=
+            '<a href="'.$el_enlace.'#'.$id.'" class="e_atras">'.
+            $texto.
+            '</a>';
+        
+        /* determina si se imprime o si se devuelve el valor */
+        if($echo):
+            echo $enlace;
+        else:
+            return $enlace;
+        endif;
+
+    else:
+        return false;
+    endif;
+}
+
 /***************************/
 /** Agrega notas de autor **/
 /***************************/
@@ -52,7 +108,7 @@ add_filter('menu_order', 'nuevo_orden_menu');
 function nuevo_orden_menu($menu)
 {
     /* Descomentar línea siguiente para ver el contenido del menú en el admin */
-    //echo('<pre>'.print_r($menu, true).'</pre>');
+    /* echo('<pre>'.print_r($menu, true).'</pre>'); */
     
     /* Arrego con el nuevo orden */
     $mi_menu=array();
@@ -74,7 +130,8 @@ function nuevo_orden_menu($menu)
     $mi_menu[]='separator-last';
     
     /* Recolecta menus no cubiertos en $mi_menu
-       ej: los creados por plugins  */
+     * ej: los creados por plugins
+     */
     $al_final=array_diff($menu, $mi_menu);
     
     /* Devuelve el nuevo menú con los recolectados al final */
@@ -88,19 +145,19 @@ add_filter('manage_posts_columns', 'columnas_de_entradas');
 function columnas_de_entradas($columnas)
 {
     /* Columnas por defecto:
-    $columnas['cb'] => '<input type="checkbox">';
-    $columnas['title'] => 'Título';
-    $columnas['author'] => 'Autor';
-    $columnas['categories'] => 'Categorías';
-    $columnas['tags'] => 'Etiquetas';
-    $columnas['comments'] => '<span class="vers"><div title="Comentarios" class="comment-grey-bubble"></div></span>';
-    $columnas['date'] => 'Fecha';
-    */
+     * $columnas['cb'] => '<input type="checkbox">';
+     * $columnas['title'] => 'Título';
+     * $columnas['author'] => 'Autor';
+     * $columnas['categories'] => 'Categorías';
+     * $columnas['tags'] => 'Etiquetas';
+     * $columnas['comments'] => '<span class="vers"><div title="Comentarios" class="comment-grey-bubble"></div></span>';
+     * $columnas['date'] => 'Fecha';
+     */
     
-    /* Reordena las columnas
-       Omite la columna 'author'
-       Agrega la columna 'Imagen destacada'
-    */
+    /* Reordena las columnas.
+     * Omite la columna 'author'.
+     * Agrega la columna 'Imagen destacada'.
+     */
     $mis_columnas=array();
     $mis_columnas['cb']=$columnas['cb'];
     $mis_columnas['title']=$columnas['title'];
