@@ -26,5 +26,15 @@ function copyright_generador($generator)
     endif;
 }
 
-
+/********************************************************/
+/** Agrega tipos MIME para el administrador multimedia **/
+/********************************************************/
+add_filter('upload_mimes','custom_upload_mimes');
+function custom_upload_mimes($mimes=array())
+{
+    $mimes['mp4'] = 'video/mp4';
+    $mimes['webm'] = 'video/webm';
+    $mimes['srt'] = 'text/plain';
+    return $mimes; 
+}
 ?>
