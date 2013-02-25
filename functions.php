@@ -284,6 +284,10 @@ function combina_archivos_css_pie()
     /* ruta */
     $archivo=get_theme_root().'/'.get_template().'/estilos.css';
     
+    if(count($wp_styles->queue)<=1):
+        return;
+    endif;
+    
     foreach($wp_styles->queue as $k=>$v):
         /* comprueba que no sea el estilo ¡creado anteriormente! */
         if($wp_styles->registered[$v]->handle==$v && 'tema'!=$v):
