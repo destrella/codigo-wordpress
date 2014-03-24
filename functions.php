@@ -1,4 +1,33 @@
 <?php
+/*************************/
+/** WordPress Generator **/
+/*************************/
+function de_generator_html()
+{return '<meta name="generator" content="DEstrella.mx" />';
+}
+function de_generator_atom()
+{return '<generator uri="http://destrella.mx/" version="'.date('Y').'">DEstrella.mx</generator>';
+}
+function de_generator_rss2()
+{return '<generator>http://destrella.mx/</generator>';
+}
+function de_generator_rdf()
+{return '<admin:generatorAgent rdf:resource="http://destrella.mx/" />';
+}
+function de_generator_comment()
+{return '<!-- generator="DEstrella.mx" -->';
+}
+function de_generator_export()
+{return '<!-- generator="DEstrella.mx" created="'.date('Y-m-d H:i').'"-->';
+}
+add_filter('get_the_generator_html', 'de_generator_html');
+add_filter('get_the_generator_xhtml', 'de_generator_html');
+add_filter('get_the_generator_atom', 'de_generator_atom');
+add_filter('get_the_generator_rss2', 'de_generator_rss2');
+add_filter('get_the_generator_rdf', 'de_generator_rdf');
+add_filter('get_the_generator_comment', 'de_generator_comment');
+add_filter('get_the_generator_export', 'de_generator_export');
+
 /***********************************************/
 /** Muestra enlace de regreso en una entrada. **/
 /** ejemplo de uso:                           **/
@@ -70,16 +99,6 @@ function pie_version_admin()
 {
     /* reemplaza la línea "Version" */
     return 'Desarrollado por: <a href="http://destrella.com.mx/" target="_blank">DEstrella.mx</a>';
-}
-
-add_filter('the_generator', 'copyright_generador');
-function copyright_generador($generator)
-{
-    /* solo si no es el feed */
-    if(!is_feed()):
-        /* reemplaza la etiqueta "meta generator" */
-        return '<meta name="generator" content="DEstrella.mx">';
-    endif;
 }
 
 /********************************************************/
