@@ -295,6 +295,12 @@ function combina_archivos_css_pie()
 {
     /* variable con los estilos a usar */
     global $wp_styles;
+    
+    /* si solo existe uno (nuestro 'tema' del paso 1), no hace nada más  */
+    if(count($wp_styles->queue)<=1):
+        return;
+    endif;
+    
     $contenido='';
     /* espacios en blanco a quitar */
     $blancos=array("\r\n", "\r", "\n", "\t", '  ', '    ');
@@ -302,10 +308,6 @@ function combina_archivos_css_pie()
     $busca_urls='/url\((.*?)\)/';
     /* ruta */
     $archivo=get_theme_root().'/'.get_template().'/estilos.css';
-    
-    if(count($wp_styles->queue)<=1):
-        return;
-    endif;
     
     foreach($wp_styles->queue as $k=>$v):
         /* comprueba que no sea el estilo ¡creado anteriormente! */
